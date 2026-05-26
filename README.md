@@ -1,6 +1,20 @@
-# IAM Policy Generator
+# IAM Policy Advisor - Web UI
 
-A static web app that generates least-privilege IAM policies from activity descriptions or existing code.
+A React-based web interface for the [awslabs/iam-policy-autopilot](https://github.com/awslabs/iam-policy-autopilot) MCP server. This tool provides a user-friendly web UI that generates IAM policies from activity descriptions or existing code.
+
+## What's Different from the Original
+
+This project builds on top of the excellent `iam-policy-autopilot` MCP server by AWS Labs, adding:
+
+- **Web-based Interface**: React + TypeScript frontend instead of CLI-only
+- **Dual Input Modes**: Describe activities in plain text OR paste/provide existing code
+- **LLM Integration**: Converts activity descriptions to AWS SDK stub code via configurable LLM providers (OpenAI, Bedrock, Custom)
+- **Local Proxy Bridge**: Solves browser-to-MCP file system access via a Node.js proxy
+- **Managed Policy Matching**: Suggests existing AWS managed policies when they cover your needs
+- **Tailscale Ready**: Configured for secure access across your tailnet
+- **No Hardcoded Keys**: Enforces `aws login` with `SignInLocalDevelopmentAccess` policy
+
+The original `iam-policy-autopilot` remains the core engine - this project just makes it more accessible via a modern web interface.
 
 ## Architecture
 
@@ -32,9 +46,18 @@ A static web app that generates least-privilege IAM policies from activity descr
 
 ## Prerequisites
 
-- Node.js 18+
-- `iam-policy-autopilot` installed (`pip install iam-policy-autopilot` or `uvx iam-policy-autopilot`)
-- AWS CLI configured with `aws login`
+This web UI requires the original AWS Labs MCP server to function:
+
+- **Node.js 18+** (for the web interface)
+- **[iam-policy-autopilot](https://github.com/awslabs/iam-policy-autopilot)** MCP server:
+  ```bash
+  # Install via pip
+  pip install iam-policy-autopilot
+  
+  # Or via uvx (recommended)
+  uvx iam-policy-autopilot
+  ```
+- **AWS CLI** configured with `aws login` and `SignInLocalDevelopmentAccess` policy attached
 
 ## Setup
 
@@ -72,3 +95,11 @@ A static web app that generates least-privilege IAM policies from activity descr
 
 1. **Describe Activity** — describe what AWS actions you need, select language, generate policy
 2. **Paste Code / Provide Path** — paste code or provide a file path for analysis
+
+## Credits
+
+This project is built on top of the excellent work by AWS Labs:
+- **Core Engine**: [awslabs/iam-policy-autopilot](https://github.com/awslabs/iam-policy-autopilot) - The MCP server that does the actual policy generation
+- **Web Interface**: This repository - Adds React frontend and browser accessibility
+
+All policy generation logic, AWS SDK analysis, and IAM knowledge comes from the original AWS Labs project. This is purely a UI layer to make it more accessible.
